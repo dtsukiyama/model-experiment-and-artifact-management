@@ -1,6 +1,7 @@
 import os
 from experiment_tracking.mlflow_integration import MLflowLogger
 
+
 def test_mlflow_logger():
     # Initialize MLflow logger
     mlflow_logger = MLflowLogger(experiment_name="Test Experiment")

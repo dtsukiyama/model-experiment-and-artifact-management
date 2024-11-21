@@ -1,6 +1,7 @@
 import os
 from experiment_tracking.logger import ExperimentLogger
 
+
 def test_logger():
     logger = ExperimentLogger(log_dir="test_logs")
     run_id = "test_run"
