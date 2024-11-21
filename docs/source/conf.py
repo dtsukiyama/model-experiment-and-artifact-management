@@ -19,7 +19,7 @@ release = "0.0.1"
 
 # General configuration
 extensions = [
-    'sphinx.ext.autodoc',
+    "sphinx.ext.autodoc",
 ]
 
 templates_path = ["_templates"]
