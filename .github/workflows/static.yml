@@ -39,10 +39,10 @@ jobs:
           pip install .
 
       # Generate documentation with sphinx-apidoc and build with sphinx-build
-      - name: Build Sphinx Documentation
+      - name: Build documentation
         run: |
           sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/source/reference/ experiment_tracking/
-          sphinx-build -n --keep-going -b html docs/source/ docs/_build/
+          sphinx-build -n -W --keep-going -b html docs/source/ docs/_build/html
 
       # Setup GitHub Pages
       - name: Setup Pages
