@@ -1,0 +1,58 @@
+name: Deploy Sphinx Documentation to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+         
+      # Install dependencies
+      - name: Install Sphinx and project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx
+          pip install .
+
+      # Generate documentation with sphinx-apidoc and build with sphinx-build
+      - name: Build Sphinx Documentation
+        run: |
+          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/reference/ experiment_tracking/ experiment_tracking/*.c experiment_tracking/*.so
+          sphinx-build -n -W --keep-going -b html docs/ docs/_build/
+
+      # Setup GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # Upload the built Sphinx documentation to GitHub Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs/_build'
+         
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

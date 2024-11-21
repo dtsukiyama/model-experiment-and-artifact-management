@@ -1,0 +1,10 @@
+pre-commit:
+  parallel: true
+  commands:
+    black:
+      run: black .
+      glob: "*.py"
+    nbqa-black:
+      run: nbqa black .
+      glob: "*.ipynb"
+
