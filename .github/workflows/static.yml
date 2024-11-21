@@ -41,8 +41,8 @@ jobs:
       # Generate documentation with sphinx-apidoc and build with sphinx-build
       - name: Build documentation
         run: |
-          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/source/reference/ experiment_tracking/
-          sphinx-build -n -W --keep-going -b html docs/source/ docs/_build/html
+          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/reference/ src/experiment_tracking/ src/experiment_tracking/*.c src/experiment_tracking/*.so
+          sphinx-build -n -W --keep-going -b html docs/ docs/_build
 
       # Setup GitHub Pages
       - name: Setup Pages
@@ -52,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs/_build/html'  # Ensure you're uploading the correct directory
+          path: './docs/_build'
          
       - name: Deploy to GitHub Pages
         id: deployment
