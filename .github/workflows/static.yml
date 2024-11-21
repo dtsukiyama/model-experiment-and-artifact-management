@@ -40,7 +40,7 @@ jobs:
       # Generate documentation with sphinx-apidoc and build with sphinx-build
       - name: Build Sphinx Documentation
         run: |
-          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/reference/ src/tacocat/ src/tacocat/*.c src/tacocat/*.so
+          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/reference/ experiment_tracking/ experiment_tracking/*.c experiment_tracking/*.so
           sphinx-build -n -W --keep-going -b html docs/ docs/_build/
 
       # Setup GitHub Pages
