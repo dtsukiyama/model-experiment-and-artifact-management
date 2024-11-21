@@ -8,8 +8,3 @@ pre-commit:
       run: nbqa black .
       glob: "*.ipynb"
 
-pre-push:
-  parallel: true
-  commands:
-    pytest-cov:
-      run: pytest --cov=utils --cov-report=term-missing tests/

@@ -1,0 +1,153 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  format:
+    name: Check formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run black
+        run: tox -e format
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Lint with Black
+        run: tox -e lint
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run mypy
+        run: python -m tox -e typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python:
+          - version: "3.10"
+            toxenv: "py310"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: ${{ matrix.python.version }}
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run pytest
+        run: tox -e ${{ matrix.python.toxenv }}
+
+  # build:
+  #   name: Build Python Package
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4.0.0
+  #       with:
+  #         python-version: "3.10"
+
+  #     - name: Install build tools
+  #       run: python -m pip install build
+
+  #     - name: Build package
+  #       run: python -m build
+
+  #     - name: Upload Artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: package-artifacts
+  #         path: |
+  #           ./dist/*.tar.gz
+  #           ./dist/*.whl
+
+  # publish:
+  #   name: Publish package
+  #   if: startsWith(github.event.ref, 'refs/tags/v')
+  #   needs:
+  #     - format
+  #     - lint
+  #     - typecheck
+  #     - test
+  #     - build
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+
+  #   steps:
+
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v3
+
+  #     - name: configure aws role
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: 
+  #         aws-region: us-west-2
+  #       env:
+  #         CODEARTIFACT_AUTH_TOKEN: ${{ steps.configure-aws.outputs.CodeArtifactAuthToken }}
+
+  #     - name: Set Up Python
+  #       uses: actions/setup-python@v4.0.0
+  #       with:
+  #         python-version: "3.10"
+
+  #     - name: Install Twine
+  #       run: python -m pip install twine
+
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: package-artifacts
+  #         path: dist
+
+  #     - name: Publish Package
+  #       run: |
+  #         export TWINE_USERNAME=aws
+  #         export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain mydomain --query authorizationToken --output text`
+  #         export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain mydomain --repository main --format pypi --query repositoryEndpoint --output text`
+  #         twine upload dist/*
