@@ -9,7 +9,8 @@
 import os
 import sys
 from importlib import metadata
-sys.path.insert(0, os.path.abspath('../..'))
+
+sys.path.insert(0, os.path.abspath("../.."))
 
 
 project = "model-experiment-and-artifact-management"
@@ -23,8 +24,8 @@ release = "0.0.1"
 # General configuration
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",         
-    "sphinx_autodoc_typehints",   
+    "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints",
 ]
 
 templates_path = ["_templates"]
