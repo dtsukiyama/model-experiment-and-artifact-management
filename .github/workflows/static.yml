@@ -34,14 +34,14 @@ jobs:
       - name: Install Sphinx and project dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx
+          pip install sphinx sphinx_rtd_theme  # Include any themes or extensions
           pip install .
 
       # Generate documentation with sphinx-apidoc and build with sphinx-build
       - name: Build Sphinx Documentation
         run: |
-          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/reference/ experiment_tracking/ experiment_tracking/*.c experiment_tracking/*.so
-          sphinx-build -n -W --keep-going -b html docs/ docs/_build/
+          sphinx-apidoc --force --implicit-namespaces --module-first --separate -o docs/source/reference/ experiment_tracking/
+          sphinx-build -n -W --keep-going -b html docs/source/ docs/_build/
 
       # Setup GitHub Pages
       - name: Setup Pages
@@ -51,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs/_build'
+          path: './docs/_build/html'  # Ensure you're uploading the correct directory
          
       - name: Deploy to GitHub Pages
         id: deployment
